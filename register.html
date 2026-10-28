@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="kk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Тіркелу — Lingo KZ</title>
+    <meta name="description" content="Lingo KZ-ге тіркелу" />
+    <meta name="theme-color" content="#7C6FF0" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body data-page="auth">
+    <div class="app-shell">
+      <div class="page-card">
+        <div class="auth-head">
+          <div class="logo-mark">🦉</div>
+          <h1>Тіркелу</h1>
+          <p>Бірнеше секундта бастаңыз</p>
+        </div>
+        <form id="form" novalidate>
+          <div class="field">
+            <label for="name">Аты-жөні</label>
+            <input id="name" type="text" maxlength="40" placeholder="Айгерім Нұрланқызы" required />
+            <div class="field-error" id="name-err"></div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="email" placeholder="at@example.com" required />
+            <div class="field-error" id="email-err"></div>
+          </div>
+          <div class="field">
+            <label for="password">Құпия сөз</label>
+            <div class="password-wrap">
+              <input id="password" type="password" autocomplete="new-password" placeholder="Кемінде 6 таңба" required />
+              <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Құпия сөзді көрсету">👁</button>
+            </div>
+            <div class="field-error" id="password-err"></div>
+          </div>
+          <div class="field">
+            <label for="password2">Құпия сөзді қайталау</label>
+            <div class="password-wrap">
+              <input id="password2" type="password" autocomplete="new-password" placeholder="Құпия сөзді қайталаңыз" required />
+              <button class="password-toggle" type="button" data-password-toggle="password2" aria-label="Құпия сөзді көрсету">👁</button>
+            </div>
+            <div class="field-error" id="password2-err"></div>
+          </div>
+          <button class="btn btn-block" id="submit" type="submit">Тіркелу</button>
+        </form>
+        <div class="or-line">немесе</div>
+        <button class="btn btn-block google-btn" id="google" type="button">Google арқылы тіркелу</button>
+        <p style="text-align: center; margin-top: 16px">Аккаунт бар ма? <a href="login.html">Кіру</a></p>
+      </div>
+    </div>
+    <script type="module">
+      import { initChrome, toast, setButtonLoading, wirePasswordToggles } from "./js/ui.js";
+      import { t, firebaseErrorKk } from "./js/i18n-kk.js";
+      import { guardPage, registerWithEmail, loginWithGoogle } from "./js/auth.js";
+
+      initChrome();
+      wirePasswordToggles();
+      await guardPage({ guestOnly: true });
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        ["name-err", "email-err", "password-err", "password2-err"].forEach((id) => {
+          document.getElementById(id).textContent = "";
+        });
+        let bad = false;
+        if (name.length < 1 || name.length > 40) {
+          document.getElementById("name-err").textContent = t.required;
+          bad = true;
+        }
+        if (!emailRe.test(email)) {
+          document.getElementById("email-err").textContent = t.invalidEmail;
+          bad = true;
+        }
+        if (password.length < 6) {
+          document.getElementById("password-err").textContent = t.weakClient;
+          bad = true;
+        }
+        if (password !== password2) {
+          document.getElementById("password2-err").textContent = t.passwordsMismatch;
+          bad = true;
+        }
+        if (bad) return;
+        const btn = document.getElementById("submit");
+        setButtonLoading(btn, true);
+        try {
+          await registerWithEmail(name, email, password);
+          location.href = "home.html";
+        } catch (err) {
+          toast(firebaseErrorKk(err), "err");
+        } finally {
+          setButtonLoading(btn, false);
+        }
+      });
+
+      document.getElementById("google").addEventListener("click", async () => {
+        const btn = document.getElementById("google");
+        setButtonLoading(btn, true);
+        try {
+          await loginWithGoogle();
+          location.href = "home.html";
+        } catch (err) {
+          toast(firebaseErrorKk(err), "err");
+        } finally {
+          setButtonLoading(btn, false);
+        }
+      });
+    </script>
+  </body>
+</html>

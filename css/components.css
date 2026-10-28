@@ -1,0 +1,388 @@
+/* Кнопки, поля, тосты, навигация, скелетоны */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: 0.25s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid rgba(124, 111, 240, 0.25);
+  box-shadow: none;
+}
+
+.btn-soft {
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: none;
+}
+
+.btn-danger {
+  background: var(--danger);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn .spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-height: 52px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: var(--input-bg);
+  color: var(--text);
+  padding: 0 16px;
+  font-size: 1rem;
+  transition: 0.25s;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.field .hint,
+.field-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  min-height: 1em;
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  min-height: auto;
+  padding: 8px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  width: min(92vw, 390px);
+  display: grid;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+  animation: toastIn 0.25s ease;
+}
+
+html[data-theme="dark"] .toast {
+  background: #0e0c16;
+}
+
+.toast.ok {
+  background: #166534;
+}
+
+.toast.err {
+  background: #991b1b;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: min(calc(100% - 24px), 390px);
+  background: var(--nav-bg);
+  border-radius: var(--radius-pill);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  z-index: 40;
+  box-shadow: 0 16px 40px rgba(30, 27, 46, 0.35);
+}
+
+.bottom-nav a {
+  color: #c9c4dc;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 54px;
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  font-weight: 700;
+  transition: 0.25s;
+}
+
+.bottom-nav a span.label {
+  display: none;
+}
+
+.bottom-nav a.active {
+  background: var(--primary);
+  color: #fff;
+  flex: 1.45;
+  flex-direction: row;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.bottom-nav a.active span.label {
+  display: inline;
+}
+
+.bottom-nav svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.demo-banner,
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: #1e1b2e;
+  color: #fff;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.offline-banner {
+  background: #b45309;
+}
+
+.progress {
+  height: 10px;
+  background: var(--primary-soft);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: inherit;
+  width: 0;
+  transition: width 0.35s ease;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2), var(--primary-soft), var(--surface-2));
+  background-size: 200% 100%;
+  animation: pulse 1.2s ease infinite;
+  border-radius: 12px;
+  min-height: 16px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: grid;
+  place-items: center;
+  z-index: 70;
+  padding: 16px;
+}
+
+.modal {
+  width: min(100%, 380px);
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.stat b {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.stat span {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ===== Навигация на компьютере: панель сверху вместо нижней ===== */
+@media (min-width: 900px) {
+  .demo-banner,
+  .offline-banner {
+    position: static;
+    order: -3;
+  }
+
+  .bottom-nav {
+    order: -2;
+    position: sticky;
+    top: 14px;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: min(calc(100% - 64px), 680px);
+    margin: 18px auto 0;
+    padding: 8px 10px;
+  }
+
+  .bottom-nav a {
+    flex-direction: row;
+    gap: 10px;
+    font-size: 0.92rem;
+    min-height: 50px;
+  }
+
+  .bottom-nav a span.label {
+    display: inline;
+  }
+
+  .bottom-nav a.active {
+    flex: 1;
+    padding: 0 12px;
+  }
+
+  .bottom-nav a:not(.active):hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
+  .btn {
+    min-height: 54px;
+  }
+
+  .stat span {
+    font-size: 0.78rem;
+  }
+}

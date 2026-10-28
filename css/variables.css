@@ -1,0 +1,67 @@
+/* Цветовая система, типографика и токены Lingo KZ */
+:root {
+  --primary: #7c6ff0;
+  --primary-hover: #6a5ce0;
+  --primary-soft: #ede9ff;
+  --ink: #1e1b2e;
+  --ink-muted: #6b6580;
+  --card: #ffffff;
+  --card-alt: #f8f7fb;
+  --white: #ffffff;
+  --success: #22c55e;
+  --success-soft: #dcfce7;
+  --danger: #ef4444;
+  --danger-soft: #fee2e2;
+  --gold: #f5b942;
+  --gold-soft: #fff4d6;
+  --today: #ef4444;
+  --shadow: 0 12px 32px rgba(124, 111, 240, 0.15);
+  --shadow-sm: 0 6px 16px rgba(30, 27, 46, 0.08);
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --radius-md: 16px;
+  --nav-h: 78px;
+  --phone: 430px;
+  --font: "Plus Jakarta Sans", "Noto Sans", Inter, system-ui, sans-serif;
+  --bg-page: linear-gradient(165deg, #ff6b7a 0%, #ff8aa0 18%, #f7b6c8 38%, #ffd3b8 62%, #c9e7ff 100%);
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --text: var(--ink);
+  --muted: var(--ink-muted);
+  --surface: var(--card);
+  --surface-2: var(--card-alt);
+  --nav-bg: #1e1b2e;
+  --input-bg: #ffffff;
+  --overlay: rgba(30, 27, 46, 0.45);
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --primary: #9b91ff;
+  --primary-hover: #aea6ff;
+  --primary-soft: #2b2750;
+  --ink: #f4f2ff;
+  --ink-muted: #b7b1cc;
+  --card: #241f3a;
+  --card-alt: #2c2748;
+  --white: #241f3a;
+  --success: #4ade80;
+  --success-soft: #163326;
+  --danger: #f87171;
+  --danger-soft: #3b1c22;
+  --gold: #fbbf24;
+  --gold-soft: #3d3012;
+  --today: #fb7185;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --bg-page: linear-gradient(165deg, #3a1c2a 0%, #3d2248 28%, #2a2d55 62%, #1b2a44 100%);
+  --glass: rgba(36, 31, 58, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text: var(--ink);
+  --muted: var(--ink-muted);
+  --surface: var(--card);
+  --surface-2: var(--card-alt);
+  --nav-bg: #12101c;
+  --input-bg: #2c2748;
+  --overlay: rgba(8, 6, 18, 0.65);
+  color-scheme: dark;
+}

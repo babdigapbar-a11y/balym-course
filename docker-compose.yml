@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+
+  firebase-emulator:
+    profiles: ["emulator"]
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "npm i -g firebase-tools && firebase emulators:start --only auth,firestore --project demo-lingo"
+    ports:
+      - "9099:9099"
+      - "8081:8081"
+      - "4000:4000"

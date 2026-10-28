@@ -1,0 +1,42 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "Dockerfile",
+      "docker-compose.yml",
+      "nginx.conf",
+      "netlify.toml",
+      "_redirects",
+      "firestore.rules",
+      "firestore.indexes.json",
+      "*.md"
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+      }
+    ]
+  },
+  "emulators": {
+    "auth": {
+      "host": "0.0.0.0",
+      "port": 9099
+    },
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 8081
+    },
+    "ui": {
+      "host": "0.0.0.0",
+      "port": 4000
+    }
+  }
+}

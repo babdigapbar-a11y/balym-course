@@ -1,0 +1,212 @@
+/* Базовые стили, типографика, a11y и адаптив */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg-page) fixed;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app-shell {
+  width: min(100%, var(--phone));
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 16px 16px calc(var(--nav-h) + 24px);
+  position: relative;
+}
+
+.app-shell.wide {
+  width: min(100%, 980px);
+}
+
+.page-card {
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  min-height: calc(100vh - 32px);
+  padding: 18px 16px 24px;
+  box-shadow: var(--shadow);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 8px;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
+
+.flash-ok {
+  animation: flashOk 0.45s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes flashOk {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    padding-top: 28px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-shell.wide {
+    width: min(100%, 1100px);
+  }
+}
+
+/* ===== Адаптив: планшет и компьютер ===== */
+@media (min-width: 600px) {
+  :root {
+    --phone: 560px;
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --phone: 1120px;
+  }
+
+  /* ширина «карточки» зависит от страницы */
+  body[data-page="lesson"],
+  body[data-page="leaderboard"] {
+    --phone: 800px;
+  }
+  body[data-page="profile"],
+  body[data-page="dictionary"] {
+    --phone: 1040px;
+  }
+  body[data-page="landing"] {
+    --phone: 960px;
+  }
+  body[data-page="auth"] {
+    --phone: 540px;
+  }
+  body[data-page="error"] {
+    --phone: 620px;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .app-shell {
+    flex: 1;
+    min-height: 0;
+    padding: 20px 32px 48px;
+  }
+
+  .page-card {
+    min-height: 0;
+    padding: 36px 44px 44px;
+    border-radius: 36px;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  html {
+    font-size: 17px;
+  }
+}

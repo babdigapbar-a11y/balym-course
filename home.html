@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="kk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Басты бет — Lingo KZ</title>
+    <meta name="description" content="Күнделікті сабақ және прогресс" />
+    <meta name="theme-color" content="#7C6FF0" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body data-page="home">
+    <div class="app-shell">
+      <div class="page-card">
+        <div class="home-grid">
+          <div class="home-col">
+            <div class="home-head">
+              <div>
+                <h1 id="hello">Сәлем! 👋</h1>
+                <p id="sub">Бүгінгі сабақты бастайық</p>
+              </div>
+              <button class="theme-toggle" data-theme-toggle type="button" aria-label="Тақырып">🌙</button>
+            </div>
+            <div class="stats-row" id="stats"></div>
+            <section class="card" style="margin-top: 14px">
+              <h3>Daily Streak 🔥</h3>
+              <div class="streak-grid" id="streak"></div>
+              <button class="btn btn-block" id="gift" type="button">Сыйлық алу</button>
+            </section>
+          </div>
+          <section class="home-col">
+            <h3>Курсты жалғастыру</h3>
+            <div class="lesson-list" id="lessons"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <script type="module">
+      import { initChrome, toast, launchConfetti, el } from "./js/ui.js";
+      import { t } from "./js/i18n-kk.js";
+      import { guardPage } from "./js/auth.js";
+      import { getLessons } from "./js/data/words.js";
+      import { getUserProfile, getCourseProgress, claimDailyReward, todayKey } from "./js/db.js";
+
+      initChrome({ nav: "home" });
+      const user = await guardPage({ requireAuth: true });
+      if (!user) throw new Error("auth");
+      let profile = await getUserProfile(user.uid);
+
+      const hello = document.getElementById("hello");
+      hello.textContent = `${t.hello}, ${profile.displayName || "оқушы"}! 👋`;
+
+      const LANG = "en"; /* курс один — ағылшын тілі */
+
+      function paintStats() {
+        const box = document.getElementById("stats");
+        box.replaceChildren();
+        [
+          [profile.points || 0, t.points],
+          [profile.streak || 0, t.streak],
+          [profile.learnedWords || 0, t.learned],
+          ["❤".repeat(profile.hearts || 5), t.hearts],
+        ].forEach(([n, l]) => {
+          const s = el("div", { class: "stat" });
+          s.append(el("b", { text: String(n) }), el("span", { text: l }));
+          box.append(s);
+        });
+      }
+
+      function paintStreak() {
+        const days = ["Дс", "Сс", "Ср", "Бс", "Жм", "Сн", "Жс"];
+        const grid = document.getElementById("streak");
+        grid.replaceChildren();
+        const todayIdx = (new Date().getDay() + 6) % 7;
+        const streak = profile.streak || 0;
+        days.forEach((d, i) => {
+          const cell = el("div", { class: "streak-day" });
+          if (i < todayIdx && todayIdx - i <= streak) cell.classList.add("done");
+          if (i === todayIdx) cell.classList.add("today");
+          cell.append(el("span", { text: "🪙" }), el("span", { text: d }));
+          grid.append(cell);
+        });
+      }
+
+      function paintGift() {
+        const today = todayKey();
+        const btn = document.getElementById("gift");
+        const can = profile.lastLessonDate === today && profile.dailyRewardClaimedDate !== today;
+        btn.disabled = !can;
+        btn.onclick = async () => {
+          try {
+            const res = await claimDailyReward(user.uid);
+            if (!res.ok && res.reason === "already") toast(t.giftAlready, "err");
+            else if (!res.ok) toast(t.giftNeedLesson, "err");
+            else {
+              profile = res.profile;
+              toast(t.giftClaimed, "ok");
+              launchConfetti();
+              paintStats();
+              paintGift();
+            }
+          } catch (e) {
+            toast(e.message || "Қате", "err");
+          }
+        };
+      }
+
+      async function paintLessons() {
+        const lang = LANG;
+        const lessons = getLessons(lang);
+        const progress = await getCourseProgress(user.uid, lang);
+        const done = new Set(progress.completedLessonIds || []);
+        const box = document.getElementById("lessons");
+        box.replaceChildren();
+        lessons.forEach((ls, i) => {
+          const prevOk = i === 0 || done.has(lessons[i - 1].id);
+          const finished = done.has(ls.id);
+          const current = prevOk && !finished;
+          const btn = el("button", { class: `lesson-item ${current ? "current" : ""}`, type: "button" });
+          btn.disabled = !prevOk;
+          const mark = finished ? "✔" : current ? "▶" : "🔒";
+          btn.append(el("span", { text: mark }), el("b", { text: ls.title }));
+          btn.addEventListener("click", () => {
+            if (!prevOk) {
+              toast(t.lessonLocked, "err");
+              return;
+            }
+            location.href = `lesson.html?lang=${lang}&lesson=${ls.id}`;
+          });
+          box.append(btn);
+        });
+      }
+
+      paintStats();
+      paintStreak();
+      paintGift();
+      await paintLessons();
+    </script>
+  </body>
+</html>

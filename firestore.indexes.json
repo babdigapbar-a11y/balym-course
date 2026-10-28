@@ -1,0 +1,15 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "points", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "weeklyPoints", "order": "DESCENDING" }]
+    }
+  ],
+  "fieldOverrides": []
+}
